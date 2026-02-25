@@ -17,10 +17,10 @@ public class Main
 
     private static Path appData;
     private static Path appConfig;
+    private static int useCloud;
 
     private static int rewriteSchoolID;
 
-    private static int useCloud;
     private static boolean firstRun = true;
     private static boolean usingCloud = false;
     private static String schoolID = "none";
@@ -51,16 +51,16 @@ public class Main
                 }
             }
             configProperties = loadConfigProperties();
-
-            System.out.println(configProperties.getProperty("RW_test", "failed"));
         }
         else
         {
             createConfig();
             configProperties = loadConfigProperties();
-
-            System.out.println(configProperties.getProperty("RW_test", "failed"));
         }
+
+        usingCloud = Boolean.parseBoolean(configProperties.getProperty("usingCloud", String.valueOf(usingCloud)));
+        firstRun = Boolean.parseBoolean(configProperties.getProperty("firstRun", String.valueOf(firstRun)));
+        schoolID = configProperties.getProperty("schoolID", "none");
 
         //Uvodna inicializacia
         if(firstRun)
@@ -98,11 +98,9 @@ public class Main
                 usingCloud = false;
             }
 
-            //DEBUG!!!
-
-            System.out.println(getAppDataDir());
-
-            System.out.println(usingCloud);
+            configProperties.setProperty("usingCloud", String.valueOf(usingCloud));
+            configProperties.setProperty("firstRun", String.valueOf(firstRun));
+            configProperties.setProperty("schoolID", schoolID);
         }
 
         saveConfigProperties();
@@ -113,7 +111,7 @@ public class Main
         try
         {
             Files.createDirectories(appData);
-            Files.writeString(appConfig, "#" + APP_NAME + "\n" + "RW_test=ok", StandardOpenOption.CREATE);
+            Files.writeString(appConfig, "#" + APP_NAME, StandardOpenOption.CREATE);
         }
         catch (IOException e)
         {
@@ -172,12 +170,5 @@ public class Main
     }
 
 
-    private static Path getAppDataDir()
-    {
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            return Paths.get(System.getProperty("user.home"),"Documents", APP_DATA_DIR);
-        } else {
-            return Paths.get(System.getProperty("user.home"),"." + APP_DATA_DIR.toLowerCase());
-        }
-    }
+
 }
