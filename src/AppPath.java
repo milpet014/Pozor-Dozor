@@ -1,10 +1,11 @@
-import java.nio.file.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public final class AppPaths
+public final class AppPath
 {
-    private AppPaths(){}
+    private AppPath(){};
 
-    private static Path getAppDataDir(String appDataDir)
+    public static Path getAppDataDir(String appDataDir)
     {
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
             return Paths.get(System.getProperty("user.home"),"Documents", appDataDir);

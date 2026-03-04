@@ -1,174 +1,33 @@
 import knižnica.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.*;
-import java.util.List;
-import java.util.Properties;
 
 public class Main
 {
     private static final int WINDOW_SIZE_X = 400;
     private static final int WINDOW_SIZE_Y = 200;
-    private static final String HEADER = "Pozor Dozor";
-    private static final String APP_NAME = "pozor_dozor";
-    private static final String APP_DATA_DIR = APP_NAME;
-
-    private static Path appData;
-    private static Path appConfig;
-    private static int useCloud;
-
-    private static int rewriteSchoolID;
+    static final String HEADER = "Pozor Dozor";
+    static final String APP_NAME = "pozor_dozor";
 
     private static boolean firstRun = true;
-    private static boolean usingCloud = false;
-    private static String schoolID = "none";
-
-    private static Properties configProperties = new Properties();
 
     public static void main(String[] args)
     {
-
-        //Vytvorenie sveta
         GRobot svet = new knižnica.GRobot(WINDOW_SIZE_X, WINDOW_SIZE_Y, HEADER);
 
-        appData = getAppDataDir();
-        appConfig = appData.resolve("config.cfg");
+        AppConfig config = new AppConfig();
 
-        if(Files.exists(appConfig))
-        {
-            if(!checkConfig())
-            {
-                try
-                {
-                    Files.delete(appConfig);
-                    createConfig();
-                }
-                catch(IOException e)
-                {
-                    Svet.sprava("Chyba, nepodarilo sa zmazat stary config: \n" + e.getMessage());
-                }
-            }
-            configProperties = loadConfigProperties();
-        }
-        else
-        {
-            createConfig();
-            configProperties = loadConfigProperties();
-        }
+        firstRun = config.isFirstRun();
 
-        usingCloud = Boolean.parseBoolean(configProperties.getProperty("usingCloud", String.valueOf(usingCloud)));
-        firstRun = Boolean.parseBoolean(configProperties.getProperty("firstRun", String.valueOf(firstRun)));
-        schoolID = configProperties.getProperty("schoolID", "none");
-
-        //Uvodna inicializacia
         if(firstRun)
         {
-            firstRun = false;
-            Svet.sprava("Welcome text", "Vitajte");
+            FirstRunWizard.firstRunWizard();
 
-            useCloud = Svet.otázka("Prajete si využívať cloudové služby aplikácie pre zálohy Vašej práce?", "Cloud");
+            config.setFirstRun(FirstRunWizard.getFirstRun());
+            config.setUsingCloud(FirstRunWizard.getUsingCloud());
+            config.setSchoolID(FirstRunWizard.getSchoolID());
 
-            if(useCloud == 0)
-            {
-                usingCloud = true;
-
-                if (!(schoolID.equals("none")))
-                {
-                    rewriteSchoolID = Svet.otazka("Aplikácia už má pridelené ID. Prajete si ho zmeniť?", "Cloud");
-                    if(rewriteSchoolID == 0)
-                    {
-                        schoolID = Svet.zadajRetazec("Zadajte identifikátor školy.", "Cloud");
-                    }
-                    else
-                    {
-                        Svet.sprava("Aplikácia bude využívať pôvodné ID", "Cloud");
-                    }
-
-                }
-                else
-                {
-                    schoolID = Svet.zadajRetazec("Zadajte identifikátor školy.", "Cloud");
-                }
-            }
-            else
-            {
-                Svet.sprava("Aplikácia ukladá vsetky dáta lokálne.", "Cloud");
-                usingCloud = false;
-            }
-
-            configProperties.setProperty("usingCloud", String.valueOf(usingCloud));
-            configProperties.setProperty("firstRun", String.valueOf(firstRun));
-            configProperties.setProperty("schoolID", schoolID);
-        }
-
-        saveConfigProperties();
-    }
-
-    private static void createConfig()
-    {
-        try
-        {
-            Files.createDirectories(appData);
-            Files.writeString(appConfig, "#" + APP_NAME, StandardOpenOption.CREATE);
-        }
-        catch (IOException e)
-        {
-            Svet.sprava("Chyba, nepodarilo sa vytvorit config: \n" + e.getMessage());
+            config.saveConfig();
         }
     }
-
-    private static boolean checkConfig()
-    {
-        String header = "#" + APP_NAME;
-        try
-        {
-            List<String> lines = Files.readAllLines(appConfig);
-            if(lines.isEmpty() || !lines.get(0).equals(header))
-            {
-                return false;
-            }
-
-            return true;
-        }
-        catch(IOException e)
-        {
-            System.out.println("Unknown error in checkConfig \n" + e.getMessage());
-        }
-        return false;
-    }
-
-    private static Properties loadConfigProperties()
-    {
-        Properties p = new Properties();
-
-        try
-        {
-            InputStream in = Files.newInputStream(appConfig);
-            p.load(in);
-        }
-        catch (IOException e)
-        {
-            Svet.sprava("Chyba, nepodarilo sa citat data z configu: \n" + e.getMessage());
-        }
-
-        return p;
-    }
-
-    private static void saveConfigProperties()
-    {
-        try
-        {
-            OutputStream out = Files.newOutputStream(appConfig, StandardOpenOption.TRUNCATE_EXISTING);
-            configProperties.store(out, APP_NAME);
-        }
-        catch (IOException e)
-        {
-            Svet.sprava("Chyba, nepodarilo sa ulozit data do configu: \n" + e.getMessage());
-        }
-    }
-
-
-
 }
