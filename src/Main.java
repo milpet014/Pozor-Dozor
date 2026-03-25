@@ -27,6 +27,8 @@ public class Main
             config.setUsingCloud(FirstRunWizard.getUsingCloud());
             config.setSchoolID(FirstRunWizard.getSchoolID());
 
+
+
             config.saveConfig();
         }
     }
