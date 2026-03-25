@@ -34,7 +34,6 @@ public class FirstRunWizard
                 {
                     Svet.sprava("Aplikácia bude využívať pôvodné ID", "Cloud");
                 }
-
             }
             else
             {

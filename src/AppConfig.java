@@ -3,15 +3,19 @@ import java.util.Properties;
 
 public class AppConfig
 {
-    private static Path appConfigPath = AppPath.getAppDataDir(Main.APP_NAME).resolve("config.cfg");
+    private static Path appConfigPath = AppPath.configPath();
+
+    private static final String CONFIG_HEADER = "config file";
 
     private Properties p;
 
     public AppConfig()
     {
-        CreateConfig.createConfig();
+        AppFile.checkFile(AppPath.configPath(), CONFIG_HEADER);
 
         this.p = ManageConfig.loadConfigProperties(appConfigPath);
+
+        ensureDefaults();
     }
 
     public boolean isFirstRun()
@@ -51,15 +55,15 @@ public class AppConfig
         return this.p;
     }
 
-    public void setDefaults()
+    public void ensureDefaults()
     {
-        this.p.setProperty("firstRun", "true");
-        this.p.setProperty("usingCloud", "false");
-        this.p.setProperty("schoolID", "none");
+        p.putIfAbsent("firstRun", "true");
+        p.putIfAbsent("usingCloud", "false");
+        p.putIfAbsent("schoolID", "none");
     }
 
     public void saveConfig()
     {
-        ManageConfig.saveConfigProperties(appConfigPath, Main.APP_NAME, p);
+        ManageConfig.saveConfigProperties(appConfigPath, CONFIG_HEADER, p);
     }
 }

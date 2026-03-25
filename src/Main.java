@@ -1,7 +1,5 @@
 import knižnica.*;
 
-import java.nio.file.*;
-
 public class Main
 {
     private static final int WINDOW_SIZE_X = 400;
@@ -10,6 +8,8 @@ public class Main
     static final String APP_NAME = "pozor_dozor";
 
     private static boolean firstRun = true;
+
+    private static PolozkaPonuky addTeacher;
 
     public static void main(String[] args)
     {
@@ -27,9 +27,16 @@ public class Main
             config.setUsingCloud(FirstRunWizard.getUsingCloud());
             config.setSchoolID(FirstRunWizard.getSchoolID());
 
-
-
             config.saveConfig();
         }
+
+        addTeacher = new PolozkaPonuky("Pridať učiteľa");
+
+        new AppRobot();
+    }
+
+    public static PolozkaPonuky getAddTeacher()
+    {
+        return addTeacher;
     }
 }

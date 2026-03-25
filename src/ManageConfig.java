@@ -10,8 +10,6 @@ import java.util.Properties;
 
 public final class ManageConfig
 {
-
-
     private ManageConfig(){};
 
     public static Properties loadConfigProperties(Path appConfigPath)
