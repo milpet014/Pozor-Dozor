@@ -1,7 +1,10 @@
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
+import java.awt.*;
+import java.util.Locale;
 
-public class AddTeacherForm
-{
+public class AddTeacherForm {
     private JPanel rootPanel;
     private JLabel titleBeforeLabel;
     private JLabel firstNameLabel;
@@ -37,83 +40,68 @@ public class AddTeacherForm
         fridayCheckBox.setSelected(true);
     }
 
-    public JTextField getFirstNameField()
-    {
+    public JTextField getFirstNameField() {
         return firstNameField;
     }
 
-    public JTextField getLastNameField()
-    {
+    public JTextField getLastNameField() {
         return lastNameField;
     }
 
-    public JPanel getRootPanel()
-    {
+    public JPanel getRootPanel() {
         return rootPanel;
     }
 
-    public JButton getCancelButton()
-    {
+    public JButton getCancelButton() {
         return cancelButton;
     }
 
-    public JButton getSaveButton()
-    {
+    public JButton getSaveButton() {
         return saveButton;
     }
 
-    public JButton getLeaveButton()
-    {
+    public JButton getLeaveButton() {
         return leaveButton;
     }
 
-    public String getTitleBeforeText()
-    {
+    public String getTitleBeforeText() {
         return titleBeforeField.getText().trim();
     }
 
-    public String getFirstNameText()
-    {
+    public String getFirstNameText() {
         return firstNameField.getText().trim();
     }
 
-    public String getMiddleNameText()
-    {
+    public String getMiddleNameText() {
         return middleNameField.getText().trim();
     }
 
-    public String getLastNameText()
-    {
+    public String getLastNameText() {
         return lastNameField.getText().trim();
     }
 
-    public String getTitleAfterText()
-    {
+    public String getTitleAfterText() {
         return titleAfterField.getText().trim();
     }
 
-    public boolean isMondaySelected()
-    {
+    public boolean isMondaySelected() {
         return mondayCheckBox.isSelected();
     }
 
-    public boolean isTuesdaySelected()
-    {
+    public boolean isTuesdaySelected() {
         return tuesdayCheckBox.isSelected();
     }
 
-    public boolean isWednesdaySelected()
-    {
+    public boolean isWednesdaySelected() {
         return wednesdayCheckBox.isSelected();
     }
 
-    public boolean isThursdaySelected()
-    {
+    public boolean isThursdaySelected() {
         return thursdayCheckBox.isSelected();
     }
 
-    public boolean isFridaySelected()
-    {
+    public boolean isFridaySelected() {
         return fridayCheckBox.isSelected();
     }
+
 }
