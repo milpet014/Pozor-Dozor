@@ -17,6 +17,127 @@ public class Teacher
     private boolean canThursday;
     private boolean canFriday;
 
-    //TODO
+    public Teacher(String degreeBeforeName,
+                   String firstName,
+                   String middleName,
+                   String lastName,
+                   String degreeAfterName,
+                   boolean canMonday,
+                   boolean canTuesday,
+                   boolean canWednesday,
+                   boolean canThursday,
+                   boolean canFriday)
+    {
+        this.degreeBeforeName = degreeBeforeName;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.degreeAfterName = degreeAfterName;
+
+        this.canMonday = canMonday;
+        this.canTuesday = canTuesday;
+        this.canWednesday = canWednesday;
+        this.canThursday = canThursday;
+        this.canFriday = canFriday;
+
+        this.dutyCount = 0;
+        this.lastDutyWeek = -1;
+    }
+
+    public String getDegreeBeforeName()
+    {
+        return degreeBeforeName;
+    }
+
+    public String getFirstName()
+    {
+        return firstName;
+    }
+
+    public String getMiddleName()
+    {
+        return middleName;
+    }
+
+    public String getLastName()
+    {
+        return lastName;
+    }
+
+    public String getDegreeAfterName()
+    {
+        return degreeAfterName;
+    }
+
+    public int getDutyCount()
+    {
+        return dutyCount;
+    }
+
+    public int getLastDutyWeek()
+    {
+        return lastDutyWeek;
+    }
+
+    public boolean isCanMonday()
+    {
+        return canMonday;
+    }
+
+    public boolean isCanTuesday()
+    {
+        return canTuesday;
+    }
+
+    public boolean isCanWednesday()
+    {
+        return canWednesday;
+    }
+
+    public boolean isCanThursday()
+    {
+        return canThursday;
+    }
+
+    public boolean isCanFriday()
+    {
+        return canFriday;
+    }
+
+    public void setDutyCount(int dutyCount)
+    {
+        this.dutyCount = dutyCount;
+    }
+
+    public void setLastDutyWeek(int lastDutyWeek)
+    {
+        this.lastDutyWeek = lastDutyWeek;
+    }
+
+    public String getFullName()
+    {
+        String fullName = "";
+
+        if(!degreeBeforeName.isEmpty())
+        {
+            fullName += degreeBeforeName + " ";
+        }
+
+        fullName += firstName + " ";
+
+        if(!middleName.isEmpty())
+        {
+            fullName += middleName + " ";
+        }
+
+        fullName += lastName;
+
+        if(!degreeAfterName.isEmpty())
+        {
+            fullName += " " + degreeAfterName;
+        }
+
+        return fullName;
+    }
 }
 
