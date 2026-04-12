@@ -13,7 +13,6 @@ public class Main
 
     public static void main(String[] args)
     {
-
         System.out.println("DISPLAY=" + System.getenv("DISPLAY"));
         System.out.println("WAYLAND_DISPLAY=" + System.getenv("WAYLAND_DISPLAY"));
         System.out.println("XDG_SESSION_TYPE=" + System.getenv("XDG_SESSION_TYPE"));
