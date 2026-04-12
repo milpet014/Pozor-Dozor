@@ -1,8 +1,14 @@
-import knižnica.*;
+import knižnica.GRobot;
+import knižnica.UdajeUdalosti;
+
+import javax.swing.SwingUtilities;
+import java.awt.Frame;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class AppRobot extends GRobot
 {
-    private AddTeacherWindow addTeacherWindow;
+    private AddTeacherFrame addTeacherFrame;
 
     public AppRobot(){};
 
@@ -11,16 +17,38 @@ public class AppRobot extends GRobot
     {
         if(UdajeUdalosti.polozkaPonuky() == Main.getAddTeacher())
         {
-            addTeacherWindow = new AddTeacherWindow();
+            SwingUtilities.invokeLater(new Runnable()
+            {
+                @Override
+                public void run() {
+                    openAddTeacherFrame();
+                }
+            });
         }
     }
 
-    @Override
-    public void volbaTlacidla()
+    private void openAddTeacherFrame()
     {
-        if(UdajeUdalosti.tlacidlo() == addTeacherWindow.getBtnMonday())
+        if(addTeacherFrame == null)
         {
-            addTeacherWindow.toggleMonday();
+            addTeacherFrame = new AddTeacherFrame();
+
+            addTeacherFrame.addWindowListener(new WindowAdapter()
+            {
+                @Override
+                public void windowClosed(WindowEvent e)
+                {
+                    addTeacherFrame = null;
+                }
+            });
+
+            addTeacherFrame.setVisible(true);
+        }
+        else
+        {
+            addTeacherFrame.setState(Frame.NORMAL);
+            addTeacherFrame.toFront();
+            addTeacherFrame.requestFocus();
         }
     }
 }
