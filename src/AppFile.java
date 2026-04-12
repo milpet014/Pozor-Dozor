@@ -41,7 +41,7 @@ public final class AppFile
             Files.createDirectories(appDataPath);
             Files.writeString(file, "#" + header);
         }
-        catch (IOException e)
+        catch(IOException e)
         {
             Svet.sprava("Chyba, nepodarilo sa zmazat subor: " + file + "\n" + e.getMessage());
         }
