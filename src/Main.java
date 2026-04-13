@@ -1,4 +1,7 @@
 import knižnica.*;
+import javax.swing.*;
+import com.formdev.flatlaf.FlatLightLaf;
+import javax.swing.UIManager;
 
 public class Main
 {
@@ -10,10 +13,22 @@ public class Main
     private static boolean firstRun = true;
 
     private static PolozkaPonuky addTeacher;
+    private static PolozkaPonuky editTeacher;
+    private static PolozkaPonuky help;
+    private static PolozkaPonuky documentation;
 
     public static void main(String[] args)
     {
         GRobot svet = new knižnica.GRobot(WINDOW_SIZE_X, WINDOW_SIZE_Y, HEADER);
+
+        try
+        {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         AppConfig config = new AppConfig();
 
@@ -31,6 +46,9 @@ public class Main
         }
 
         addTeacher = new PolozkaPonuky("Pridať učiteľa");
+        editTeacher = new PolozkaPonuky("Upraviť záznamy");
+        help = new PolozkaPonuky("O programe");
+        documentation = new PolozkaPonuky("Dokumentácia");
 
         new AppRobot();
     }
@@ -38,5 +56,20 @@ public class Main
     public static PolozkaPonuky getAddTeacher()
     {
         return addTeacher;
+    }
+
+    public static PolozkaPonuky getEditTeacher()
+    {
+        return editTeacher;
+    }
+
+    public static PolozkaPonuky getHelp()
+    {
+        return help;
+    }
+
+    public static PolozkaPonuky getDocumentation()
+    {
+        return documentation;
     }
 }

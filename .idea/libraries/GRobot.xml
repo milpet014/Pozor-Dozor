@@ -2,6 +2,7 @@
   <library name="GRobot">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/GRobot.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/flatlaf-3.7.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

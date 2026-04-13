@@ -29,6 +29,7 @@ public class Teacher {
                    boolean canWednesday,
                    boolean canThursday,
                    boolean canFriday) {
+
         this.id = id;
 
         this.degreeBeforeName = degreeBeforeName;

@@ -1,18 +1,24 @@
 import knižnica.Svet;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AddTeacherFrame extends JFrame
 {
-    private final AddTeacherForm form;
-    Teacher newTeacher;
+    private enum FocusField
+    {
+        TITLE_BEFORE,
+        FIRST_NAME,
+        LAST_NAME
+    }
+
+    private Teacher newTeacher;
+    private final TeacherRepository teacherRepository = new TeacherRepository();
+
+    private final AddTeacherForm form = new AddTeacherForm();
 
     public AddTeacherFrame()
     {
-        this.form = new AddTeacherForm();
-
         setTitle("Pridať učiteľa");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setContentPane(form.getRootPanel());
@@ -45,10 +51,22 @@ public class AddTeacherFrame extends JFrame
         });
 
         getRootPane().setDefaultButton(form.getSaveButton());
+
+        //UIStyles.stylePrimaryButton(form.getSaveButton());
+        //UIStyles.styleSuccessButton(form.getLeaveButton());
+        //UIStyles.styleDangerButton(form.getCancelButton());
     }
 
     public void createTeacher(boolean leave)
     {
+        int newId = teacherRepository.getNextId();
+
+        if(newId == -1)
+        {
+            Svet.sprava("Neznáma chyba pri prideľovaní ID", "CHYBA");
+            return;
+        }
+
         String degreeBeforeName = form.getTitleBeforeText();
         String firstName = form.getFirstNameText();
         String middleName = form.getMiddleNameText();
@@ -64,18 +82,18 @@ public class AddTeacherFrame extends JFrame
         if(firstName.isEmpty())
         {
             Svet.sprava("Meno je povinné", "Chyba");
-            focusFirstNameField();
+            focus(FocusField.FIRST_NAME);
             return;
         }
         if(lastName.isEmpty())
         {
             Svet.sprava("Priezvisko je povinné", "Chyba");
-            focusLastNameField();
+            focus(FocusField.LAST_NAME);
             return;
         }
 
         newTeacher = new Teacher(
-                1,
+                newId,
                 degreeBeforeName,
                 firstName,
                 middleName,
@@ -88,6 +106,14 @@ public class AddTeacherFrame extends JFrame
                 canFriday
         );
 
+        boolean saved = teacherRepository.saveTeacher(newTeacher);
+
+        if(!saved)
+        {
+            Svet.sprava("Nepodarilo sa uložiť učiteľa", "CHYBA");
+            return;
+        }
+
         Svet.sprava("Pridaný učiteľ: " + newTeacher.getFullName() + ", id: " + newTeacher.getId() + ".", "Pridaný učiteľ");
 
         if(leave)
@@ -97,39 +123,43 @@ public class AddTeacherFrame extends JFrame
         else
         {
             form.clearForm();
-            focusFirstNameField();
+            focus(FocusField.TITLE_BEFORE);
         }
     }
 
-    private void focusFirstNameField()
-    {
-        focus();
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                form.getFirstNameField().requestFocusInWindow();
-            }
-        });
-    }
-
-    private void focusLastNameField()
-    {
-        focus();
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                form.getLastNameField().requestFocusInWindow();
-            }
-        });
-    }
-
-    private void focus()
+    private void focus(FocusField field)
     {
         setState(JFrame.NORMAL);
         toFront();
         requestFocus();
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run()
+            {
+                switch(field)
+                {
+                    case TITLE_BEFORE:
+                        form.getTitleBeforeField().requestFocusInWindow();
+                        break;
+                    case FIRST_NAME:
+                        form.getFirstNameField().requestFocusInWindow();
+                        break;
+                    case LAST_NAME:
+                        form.getLastNameField().requestFocusInWindow();
+                }
+            }
+        });
+    }
+
+    private void styleButton(JButton button, java.awt.Color backgroundColor)
+    {
+        button.setBackground(backgroundColor);
+        button.setForeground(java.awt.Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setOpaque(true);
+        button.setContentAreaFilled(true);
     }
 
     public Teacher getNewTeacher()

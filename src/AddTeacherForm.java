@@ -27,11 +27,11 @@ public class AddTeacherForm {
     private JButton leaveButton;
 
     public void clearForm() {
-        titleBeforeField.setText("");
+        //titleBeforeField.setText("");
         firstNameField.setText("");
         middleNameField.setText("");
         lastNameField.setText("");
-        titleAfterField.setText("");
+        //titleAfterField.setText("");
 
         mondayCheckBox.setSelected(true);
         tuesdayCheckBox.setSelected(true);
@@ -40,12 +40,66 @@ public class AddTeacherForm {
         fridayCheckBox.setSelected(true);
     }
 
+    public void setTitleBeforeText(String text)
+    {
+        titleBeforeField.setText(text);
+    }
+
+    public void setFirstNameText(String text)
+    {
+        firstNameField.setText(text);
+    }
+
+    public void setMiddleNameText(String text)
+    {
+        middleNameField.setText(text);
+    }
+
+    public void setLastNameText(String text)
+    {
+        lastNameField.setText(text);
+    }
+
+    public void setTitleAfterText(String text)
+    {
+        titleAfterField.setText(text);
+    }
+
+    public void setMondaySelected(boolean selected)
+    {
+        mondayCheckBox.setSelected(selected);
+    }
+
+    public void setTuesdaySelected(boolean selected)
+    {
+        tuesdayCheckBox.setSelected(selected);
+    }
+
+    public void setWednesdaySelected(boolean selected)
+    {
+        wednesdayCheckBox.setSelected(selected);
+    }
+
+    public void setThursdaySelected(boolean selected)
+    {
+        thursdayCheckBox.setSelected(selected);
+    }
+
+    public void setFridaySelected(boolean selected)
+    {
+        fridayCheckBox.setSelected(selected);
+    }
+
     public JTextField getFirstNameField() {
         return firstNameField;
     }
 
     public JTextField getLastNameField() {
         return lastNameField;
+    }
+
+    public JTextField getTitleBeforeField() {
+        return titleBeforeField;
     }
 
     public JPanel getRootPanel() {

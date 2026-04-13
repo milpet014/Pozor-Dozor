@@ -1,14 +1,20 @@
 import knižnica.GRobot;
+import knižnica.Svet;
 import knižnica.UdajeUdalosti;
 
 import javax.swing.SwingUtilities;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppRobot extends GRobot
 {
     private AddTeacherFrame addTeacherFrame;
+    private ListTeachersFrame listTeachersFrame;
+    private TeacherRepository teacherRepository = new TeacherRepository();
+    private List<Teacher> teachers = teacherRepository.loadTeachers();
 
     public AppRobot(){};
 
@@ -24,6 +30,52 @@ public class AppRobot extends GRobot
                     openAddTeacherFrame();
                 }
             });
+        }
+
+        if(UdajeUdalosti.polozkaPonuky() == Main.getEditTeacher())
+        {
+            SwingUtilities.invokeLater(new Runnable()
+            {
+                @Override
+                public void run() {
+                    openListTeacherFrame(teachers);
+                }
+            });
+        }
+
+        if(UdajeUdalosti.polozkaPonuky() == Main.getHelp())
+        {
+            Svet.sprava("Verzia: Alpha-0.4", "O programe");
+        }
+
+        if(UdajeUdalosti.polozkaPonuky() == Main.getDocumentation())
+        {
+            Svet.sprava("It Works", "Placeholder");
+        }
+    }
+
+    private void openListTeacherFrame(List<Teacher> teachers)
+    {
+        if(listTeachersFrame == null)
+        {
+            listTeachersFrame = new ListTeachersFrame(teachers);
+
+            listTeachersFrame.addWindowListener(new WindowAdapter()
+            {
+                @Override
+                public void windowClosed(WindowEvent e)
+                {
+                    listTeachersFrame = null;
+                }
+            });
+
+            listTeachersFrame.setVisible(true);
+        }
+        else
+        {
+            listTeachersFrame.setState(Frame.NORMAL);
+            listTeachersFrame.toFront();
+            listTeachersFrame.requestFocus();
         }
     }
 
