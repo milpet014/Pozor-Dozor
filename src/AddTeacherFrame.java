@@ -43,6 +43,8 @@ public class AddTeacherFrame extends JFrame
                 createTeacher(true);
             }
         });
+
+        getRootPane().setDefaultButton(form.getSaveButton());
     }
 
     public void createTeacher(boolean leave)
@@ -72,8 +74,8 @@ public class AddTeacherFrame extends JFrame
             return;
         }
 
-
         newTeacher = new Teacher(
+                1,
                 degreeBeforeName,
                 firstName,
                 middleName,
@@ -86,7 +88,7 @@ public class AddTeacherFrame extends JFrame
                 canFriday
         );
 
-        Svet.sprava("Pridaný učiteľ: " + newTeacher.getFullName() + ".", "Pridaný učiteľ");
+        Svet.sprava("Pridaný učiteľ: " + newTeacher.getFullName() + ", id: " + newTeacher.getId() + ".", "Pridaný učiteľ");
 
         if(leave)
         {

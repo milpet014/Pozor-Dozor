@@ -1,7 +1,8 @@
 import java.time.LocalDate;
 
-public class Teacher
-{
+public class Teacher {
+    private int id;
+
     private String degreeBeforeName;
     private String firstName;
     private String middleName;
@@ -17,7 +18,8 @@ public class Teacher
     private boolean canThursday;
     private boolean canFriday;
 
-    public Teacher(String degreeBeforeName,
+    public Teacher(int id,
+                   String degreeBeforeName,
                    String firstName,
                    String middleName,
                    String lastName,
@@ -26,8 +28,9 @@ public class Teacher
                    boolean canTuesday,
                    boolean canWednesday,
                    boolean canThursday,
-                   boolean canFriday)
-    {
+                   boolean canFriday) {
+        this.id = id;
+
         this.degreeBeforeName = degreeBeforeName;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -42,6 +45,11 @@ public class Teacher
 
         this.dutyCount = 0;
         this.lastDutyWeek = -1;
+    }
+
+    public int getId()
+    {
+        return this.id;
     }
 
     public String getDegreeBeforeName()
