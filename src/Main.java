@@ -28,11 +28,12 @@ public class Main
     public static void main(String[] args)
     {
         worldRobot = new knižnica.GRobot(WINDOW_SIZE_X, WINDOW_SIZE_Y, HEADER);
-        worldRobot.skry();
 
         Svet.zbal();
         Svet.vystred();
-        Svet.upevni();
+
+        worldRobot.skry();
+        worldRobot.text("Načítava sa...");
 
         applyFlatLafUI();
 
