@@ -112,8 +112,8 @@ public class Main
                 Image.SCALE_SMOOTH
         );
 
-        worldRobot.podlaha.vymazGrafiku();
-        worldRobot.podlaha.obrazok(scaledImage);
+        GRobot.podlaha.vymazGrafiku();
+        GRobot.podlaha.obrazok(scaledImage);
         Svet.prekresli();
     }
 
