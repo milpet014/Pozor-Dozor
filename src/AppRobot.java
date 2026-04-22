@@ -13,10 +13,11 @@ public class AppRobot extends GRobot
 {
     private AddTeacherFrame addTeacherFrame;
     private ListTeachersFrame listTeachersFrame;
-    private TeacherRepository teacherRepository = new TeacherRepository();
-    private List<Teacher> teachers = teacherRepository.loadTeachers();
 
-    public AppRobot(){};
+    public AppRobot()
+    {
+        skry();
+    };
 
     @Override
     public void volbaPolozkyPonuky()
@@ -38,6 +39,8 @@ public class AppRobot extends GRobot
             {
                 @Override
                 public void run() {
+                    TeacherRepository teacherRepository = new TeacherRepository();
+                    List<Teacher> teachers = teacherRepository.loadTeachers();
                     openListTeacherFrame(teachers);
                 }
             });
@@ -54,7 +57,7 @@ public class AppRobot extends GRobot
         }
     }
 
-    private void openListTeacherFrame(List<Teacher> teachers)
+    public void openListTeacherFrame(List<Teacher> teachers)
     {
         if(listTeachersFrame == null)
         {

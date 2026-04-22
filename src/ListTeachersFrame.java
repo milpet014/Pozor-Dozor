@@ -43,14 +43,8 @@ public class ListTeachersFrame extends JFrame
             }
         });
 
-        //UIStyles.styleSoftButton(form.getBackButton());
-        //UIStyles.styleSoftButton(form.getNextButton());
-        //UIStyles.styleSuccessButton(form.getOkButton());
-
         for(byte i  = 0; i < PAGE_SIZE; i++)
         {
-            //UIStyles.stylePrimaryButton(form.getTeacherButton(i));
-
             final byte buttonIndex = i;
             form.getTeacherButton(buttonIndex).addActionListener(new ActionListener() {
                 @Override
@@ -71,6 +65,7 @@ public class ListTeachersFrame extends JFrame
 
         EditTeacherFrame frame = new EditTeacherFrame(teacher);
         frame.setVisible(true);
+        dispose();
     }
 
     private void refreshPage()

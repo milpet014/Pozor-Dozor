@@ -1,12 +1,16 @@
 import knižnica.*;
-import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
+import org.apache.pdfbox.pdmodel.interactive.action.PDActionThread;
+
 import javax.swing.UIManager;
+import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Path;
 
 public class Main
 {
-    private static final int WINDOW_SIZE_X = 400;
-    private static final int WINDOW_SIZE_Y = 200;
+    private static final int WINDOW_SIZE_X = 594;
+    private static final int WINDOW_SIZE_Y = 840;
     static final String HEADER = "Pozor Dozor";
     static final String APP_NAME = "pozor_dozor";
 
@@ -17,18 +21,22 @@ public class Main
     private static PolozkaPonuky help;
     private static PolozkaPonuky documentation;
 
+    private static GRobot worldRobot;
+    private static Path pngPath = AppPath.appDataPath().resolve("teachers_preview.png");
+    private static String pngPathStr = pngPath.normalize().toString();
+
     public static void main(String[] args)
     {
-        GRobot svet = new knižnica.GRobot(WINDOW_SIZE_X, WINDOW_SIZE_Y, HEADER);
+        worldRobot = new knižnica.GRobot(WINDOW_SIZE_X, WINDOW_SIZE_Y, HEADER);
+        worldRobot.skry();
 
-        try
-        {
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        Svet.zbal();
+        Svet.vystred();
+        Svet.upevni();
+
+        applyFlatLafUI();
+
+        refreshTeachersPdfPreview();
 
         AppConfig config = new AppConfig();
 
@@ -51,6 +59,61 @@ public class Main
         documentation = new PolozkaPonuky("Dokumentácia");
 
         new AppRobot();
+    }
+
+    private static void applyFlatLafUI()
+    {
+        try
+        {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        }
+        catch (Exception e)
+        {
+            Svet.sprava("Neoćakávana chyba: " + e, "Chyba");
+        }
+    }
+
+    private static void refreshTeachersPdfPreview()
+    {
+        try
+        {
+            TeacherPdfGenerator teacherPdfGenerator = new TeacherPdfGenerator();
+            teacherPdfGenerator.generateTeacherListPdf();
+            teacherPdfGenerator.renderTeacherListPreview();
+
+            showTeacherPreviewOnCanvas();
+        }
+        catch(IOException e)
+        {
+            Svet.sprava("Chyba, nepodarilo sa generovať PDF " + e, "chyba");
+        }
+    }
+
+    private static void showTeacherPreviewOnCanvas()
+    {
+        Svet.uvolni(pngPathStr);
+
+        Obrazok originalImage = Obrazok.precitaj(pngPathStr);
+
+        double imageWidth = originalImage.sirka();
+        double imageHeight = originalImage.vyska();
+
+        originalImage.kresli(pngPathStr);
+
+        double scale = Math.min((double) WINDOW_SIZE_X / imageWidth,(double) WINDOW_SIZE_Y / imageHeight);
+
+        int scaledWidth = (int)Math.round(imageWidth * scale);
+        int scaledHeight = (int)Math.round(imageHeight * scale);
+
+        Image scaledImage = originalImage.getScaledInstance(
+                scaledWidth,
+                scaledHeight,
+                Image.SCALE_SMOOTH
+        );
+
+        worldRobot.podlaha.vymazGrafiku();
+        worldRobot.podlaha.obrazok(scaledImage);
+        Svet.prekresli();
     }
 
     public static PolozkaPonuky getAddTeacher()

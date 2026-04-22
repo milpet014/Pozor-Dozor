@@ -16,12 +16,12 @@ public class TeacherRepository
     private final Path teachersPath = AppPath.teachersPath();
     private final Path appDataPath = AppPath.appDataPath();
     private final Path teachersBackupPath = AppPath.appDataPath().resolve("teachers_backup.csv");
-    private List<Teacher> teachers = new ArrayList<>();
 
     public TeacherRepository(){};
 
     public List<Teacher> loadTeachers()
     {
+        List<Teacher> teachers = new ArrayList<>();
         try
         {
             ensureTeachersFileReady();
@@ -164,21 +164,7 @@ public class TeacherRepository
         {
             ensureTeachersFileReady();
 
-            String line =
-                    teacher.getId() + ";" +
-                            clean(teacher.getDegreeBeforeName()) + ";" +
-                            clean(teacher.getFirstName()) + ";" +
-                            clean(teacher.getMiddleName()) + ";" +
-                            clean(teacher.getLastName()) + ";" +
-                            clean(teacher.getDegreeAfterName()) + ";" +
-                            teacher.getDutyCount() + ";" +
-                            teacher.getLastDutyWeek() + ";" +
-                            teacher.isCanMonday() + ";" +
-                            teacher.isCanTuesday() + ";" +
-                            teacher.isCanWednesday() + ";" +
-                            teacher.isCanThursday() + ";" +
-                            teacher.isCanFriday() +
-                            System.lineSeparator();
+            String line = toCsvLine(teacher) + System.lineSeparator();
 
             Files.writeString(teachersPath, line, StandardOpenOption.APPEND);
 
@@ -189,6 +175,65 @@ public class TeacherRepository
             Svet.sprava("Nepodarilo sa zapísať údaje do súboru csv. " + e, "CHYBA");
             return false;
         }
+    }
+
+    public boolean updateTeacher(Teacher updatedTeacher)
+    {
+        List<Teacher> teachers = loadTeachers();
+
+        boolean found = false;
+
+        for(int i = 0; i < teachers.size(); i++)
+        {
+            if(teachers.get(i).getId() == updatedTeacher.getId())
+            {
+                teachers.set(i, updatedTeacher);
+                found = true;
+                break;
+            }
+        }
+
+        if(!found)
+        {
+            Svet.sprava("Učiteľ na úpravu nebol nájdený.", "Chyba");
+            return false;
+        }
+
+        StringBuilder content = new StringBuilder();
+        content.append(HEADER).append(System.lineSeparator());
+
+        for(Teacher teacher : teachers)
+        {
+            content.append(toCsvLine(teacher)).append(System.lineSeparator());
+        }
+
+        try
+        {
+            Files.writeString(teachersPath, content.toString());
+            return true;
+        }
+        catch (IOException e)
+        {
+            Svet.sprava("Nepodarilo sa uložiť upraveného učiteľa:\n" + e.getMessage(), "Chyba");
+            return false;
+        }
+    }
+
+    private String toCsvLine(Teacher teacher)
+    {
+        return teacher.getId() + ";" +
+                clean(teacher.getDegreeBeforeName()) + ";" +
+                clean(teacher.getFirstName()) + ";" +
+                clean(teacher.getMiddleName()) + ";" +
+                clean(teacher.getLastName()) + ";" +
+                clean(teacher.getDegreeAfterName()) + ";" +
+                teacher.getDutyCount() + ";" +
+                teacher.getLastDutyWeek() + ";" +
+                teacher.isCanMonday() + ";" +
+                teacher.isCanTuesday() + ";" +
+                teacher.isCanWednesday() + ";" +
+                teacher.isCanThursday() + ";" +
+                teacher.isCanFriday();
     }
 
     private String clean(String text)
