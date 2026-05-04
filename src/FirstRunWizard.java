@@ -15,7 +15,11 @@ public class FirstRunWizard
     public static void firstRunWizard()
     {
         firstRun = false;
-        Svet.sprava("Welcome text", "Vitajte");
+        Svet.sprava("Pozor Dozor je jednoduchá aplikácia určená na prípravu a generovanie rozpisu školských dozorov. Umožňuje evidovať učiteľov, nastavovať ich dostupnosť počas týždňa, upravovať dni v kalendári a následne vytvoriť prehľadný mesačný rozpis dozorov vo forme PDF dokumentu.\n" +
+                "\n" +
+                "Aplikácia podporuje aj manuálnu zálohu dát na cloud. Používateľ môže uložiť aktuálne súbory aplikácie na cloud alebo ich neskôr načítať späť, napríklad pri prenose aplikácie na iný počítač alebo pri obnove údajov. Cloudová záloha využíva kód školy, ktorý slúži na prístup k príslušnému cloudovému priestoru.\n" +
+                "\n" +
+                "Kód školy je možné získať po žiadosti na emailovej adrese: email@gmail.com.", "Vitajte");
 
         useCloud = Svet.otázka("Prajete si využívať cloudové služby aplikácie pre zálohy Vašej práce?", "Cloud");
 

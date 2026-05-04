@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Pozor-Dozor:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Pozor_Dozor_jar</output-path>
+    <root id="archive" name="Pozor-Dozor.jar">
+      <element id="module-output" name="Pozor-Dozor" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/pdfbox-app-3.0.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/GRobot.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/flatlaf-3.7.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

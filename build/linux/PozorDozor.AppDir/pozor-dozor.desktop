@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Pozor Dozor
+Comment=Aplikácia na generovanie školských dozorov
+Exec=AppRun
+Icon=pozor-dozor
+Categories=Education;Office;
+Terminal=false

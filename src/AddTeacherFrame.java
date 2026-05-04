@@ -21,6 +21,7 @@ public class AddTeacherFrame extends JFrame
     {
         setTitle("Pridať učiteľa");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/icons/pozor-dozor.png")).getImage());
         setContentPane(form.getRootPanel());
         pack();
         setLocationRelativeTo(null);
@@ -51,10 +52,6 @@ public class AddTeacherFrame extends JFrame
         });
 
         getRootPane().setDefaultButton(form.getSaveButton());
-
-        //UIStyles.stylePrimaryButton(form.getSaveButton());
-        //UIStyles.styleSuccessButton(form.getLeaveButton());
-        //UIStyles.styleDangerButton(form.getCancelButton());
     }
 
     public void createTeacher(boolean leave)
@@ -114,6 +111,8 @@ public class AddTeacherFrame extends JFrame
             return;
         }
 
+        Main.invalidatePendingDuties();
+
         Svet.sprava("Pridaný učiteľ: " + newTeacher.getFullName() + ", id: " + newTeacher.getId() + ".", "Pridaný učiteľ");
 
         if(leave)
@@ -150,16 +149,6 @@ public class AddTeacherFrame extends JFrame
                 }
             }
         });
-    }
-
-    private void styleButton(JButton button, java.awt.Color backgroundColor)
-    {
-        button.setBackground(backgroundColor);
-        button.setForeground(java.awt.Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setOpaque(true);
-        button.setContentAreaFilled(true);
     }
 
     public Teacher getNewTeacher()

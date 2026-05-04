@@ -20,11 +20,12 @@ public class EditTeacherFrame extends JFrame
 
         setTitle("Úprava záznamu");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/icons/pozor-dozor.png")).getImage());
         setContentPane(form.getRootPanel());
         pack();
         setLocationRelativeTo(null);
 
-        form.getLeaveButton().setVisible(false);
+        form.getLeaveButton().setText("Vymazať");
         form.getSaveButton().setText("Uložiť");
 
         form.getCancelButton().addActionListener(new ActionListener() {
@@ -41,7 +42,42 @@ public class EditTeacherFrame extends JFrame
             }
         });
 
+        form.getLeaveButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteTeacher();
+            }
+        });
+
         fillForm();
+    }
+
+    private void deleteTeacher()
+    {
+        int confirm = Svet.otazka(
+                "Naozaj chcete vymazať učiteľa:\n" + teacher.getFullName() + "?",
+                "Vymazať učiteľa"
+        );
+
+        if(confirm != 0)
+        {
+            return;
+        }
+
+        TeacherRepository teacherRepository = new TeacherRepository();
+        boolean deleted = teacherRepository.deleteTeacherById(teacher.getId());
+
+        if(deleted)
+        {
+            Main.invalidatePendingDuties();
+
+            Svet.sprava("Učiteľ bol vymazaný.", "Hotovo");
+            dispose();
+        }
+        else
+        {
+            Svet.sprava("Nepodarilo sa vymazať učiteľa.", "Chyba");
+        }
     }
 
     private void saveTeacherChanges()
@@ -93,6 +129,8 @@ public class EditTeacherFrame extends JFrame
 
         if(updated)
         {
+            Main.invalidatePendingDuties();
+
             Svet.sprava("Upravený učiteľ: " + updatedTeacher.getFullName() + ", id: " + updatedTeacher.getId() + ".", "Pridaný učiteľ");
             dispose();
         }

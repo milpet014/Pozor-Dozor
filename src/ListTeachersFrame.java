@@ -18,6 +18,7 @@ public class ListTeachersFrame extends JFrame
 
         setTitle("Upraviť záznam učiteľa");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/icons/pozor-dozor.png")).getImage());
         setContentPane(form.getRootPanel());
         pack();
         setLocationRelativeTo(null);

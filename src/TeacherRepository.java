@@ -6,6 +6,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Comparator;
 
 public class TeacherRepository
 {
@@ -82,6 +83,67 @@ public class TeacherRepository
         return teachers;
     }
 
+    public String buildTeachersSignature()
+    {
+        List<Teacher> teachers = loadTeachers();
+
+        teachers.sort(Comparator.comparingInt(Teacher::getId));
+
+        StringBuilder signature = new StringBuilder();
+
+        for(Teacher teacher : teachers)
+        {
+            signature.append(teacher.getId()).append("|")
+                    .append(clean(teacher.getDegreeBeforeName())).append("|")
+                    .append(clean(teacher.getFirstName())).append("|")
+                    .append(clean(teacher.getMiddleName())).append("|")
+                    .append(clean(teacher.getLastName())).append("|")
+                    .append(clean(teacher.getDegreeAfterName())).append("|")
+                    .append(teacher.getDutyCount()).append("|")
+                    .append(teacher.getLastDutyWeek()).append("|")
+                    .append(teacher.isCanMonday()).append("|")
+                    .append(teacher.isCanTuesday()).append("|")
+                    .append(teacher.isCanWednesday()).append("|")
+                    .append(teacher.isCanThursday()).append("|")
+                    .append(teacher.isCanFriday()).append(";")
+                    .append(System.lineSeparator());
+        }
+
+        return signature.toString();
+    }
+
+    public boolean deleteTeacherById(int id)
+    {
+        List<Teacher> teachers = loadTeachers();
+
+        boolean removed = teachers.removeIf(teacher -> teacher.getId() == id);
+
+        if(!removed)
+        {
+            Svet.sprava("Učiteľ na vymazanie nebol nájdený.", "Chyba");
+            return false;
+        }
+
+        StringBuilder content = new StringBuilder();
+        content.append(HEADER).append(System.lineSeparator());
+
+        for(Teacher teacher : teachers)
+        {
+            content.append(toCsvLine(teacher)).append(System.lineSeparator());
+        }
+
+        try
+        {
+            Files.writeString(teachersPath, content.toString());
+            return true;
+        }
+        catch(IOException e)
+        {
+            Svet.sprava("Nepodarilo sa vymazať učiteľa:\n" + e.getMessage(), "Chyba");
+            return false;
+        }
+    }
+
     private void ensureTeachersFileReady()
     {
         try
@@ -155,6 +217,28 @@ public class TeacherRepository
         {
             Svet.sprava("Chyba pri čítaní ID učiteľa v teachers.csv:\n" + e.getMessage(), "Chyba");
             return -1;
+        }
+    }
+
+    public boolean saveAllTeachers(List<Teacher> teachers)
+    {
+        StringBuilder content = new StringBuilder();
+        content.append(HEADER).append(System.lineSeparator());
+
+        for(Teacher teacher : teachers)
+        {
+            content.append(toCsvLine(teacher)).append(System.lineSeparator());
+        }
+
+        try
+        {
+            Files.writeString(teachersPath, content.toString());
+            return true;
+        }
+        catch(IOException e)
+        {
+            Svet.sprava("Nepodarilo sa uložiť teachers.csv:\n" + e.getMessage(), "Chyba");
+            return false;
         }
     }
 
