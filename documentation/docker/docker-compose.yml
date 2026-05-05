@@ -1,0 +1,15 @@
+services:
+    pozor-dozor:
+        image: zensical/zensical
+        container_name: pozor-dozor
+        working_dir: /docs
+        volumes:
+            - ../data:/docs
+        restart: unless-stopped
+        networks:
+            - proxy
+        ports:
+            - "8107:8000"
+networks:
+    proxy:
+        external: true
