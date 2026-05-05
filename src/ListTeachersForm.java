@@ -1,8 +1,11 @@
 import javax.swing.*;
 
 public class ListTeachersForm {
+    // Tlačidlá na stránkovanie zoznamu učiteľov.
     private JButton nextButton;
     private JButton backButton;
+
+    // Tlačidlá jednotlivých učiteľov na aktuálnej stránke.
     private JButton teacherButton1;
     private JButton teacherButton2;
     private JButton teacherButton3;
@@ -13,7 +16,11 @@ public class ListTeachersForm {
     private JButton teacherButton8;
     private JButton teacherButton9;
     private JButton teacherButton10;
+
+    // Hlavný panel formulára vytvorený cez IntelliJ GUI Designer.
     private JPanel rootPanel;
+
+    // Labely s menami učiteľov na aktuálnej stránke.
     private JLabel teacherLabel1;
     private JLabel teacherLabel2;
     private JLabel teacherLabel3;
@@ -24,41 +31,50 @@ public class ListTeachersForm {
     private JLabel teacherLabel8;
     private JLabel teacherLabel9;
     private JLabel teacherLabel10;
+
+    // Tlačidlo na zatvorenie okna a label s číslom stránky.
     private JButton okButton;
     private JLabel pageLabel;
 
     public JPanel getRootPanel()
     {
+        // Vracia hlavný panel formulára.
         return rootPanel;
     }
 
     public JButton getNextButton()
     {
+        // Vracia tlačidlo na ďalšiu stránku.
         return nextButton;
     }
 
     public JButton getBackButton()
     {
+        // Vracia tlačidlo na predchádzajúcu stránku.
         return backButton;
     }
 
     public JButton getOkButton()
     {
+        // Vracia tlačidlo na zatvorenie okna.
         return okButton;
     }
 
     public JLabel getPageLabel()
     {
+        // Vracia label s informáciou o aktuálnej stránke.
         return pageLabel;
     }
 
     public void setPageLabelText(String text)
     {
+        // Nastaví text informácie o aktuálnej stránke.
         pageLabel.setText(text);
     }
 
     public JButton getTeacherButton(byte index)
     {
+        // Vracia tlačidlo učiteľa podľa indexu na aktuálnej stránke.
         switch(index)
         {
             case 0:
@@ -88,6 +104,7 @@ public class ListTeachersForm {
 
     public JLabel getTeacherLabelText(byte index)
     {
+        // Vracia label učiteľa podľa indexu na aktuálnej stránke.
         switch (index)
         {
             case 0:
@@ -117,6 +134,7 @@ public class ListTeachersForm {
 
     public void setTeacherLabelText(byte index, String text)
     {
+        // Nastaví meno učiteľa do labelu podľa indexu.
         switch(index)
         {
             case 0:
@@ -156,11 +174,13 @@ public class ListTeachersForm {
 
     public void setTeacherButtonEnabled(byte index, boolean enabled)
     {
+        // Povolí alebo zakáže tlačidlo učiteľa podľa indexu.
         getTeacherButton(index).setEnabled(enabled);
     }
 
     public void clearTeacherList()
     {
+        // Vyčistí všetky riadky zoznamu pred načítaním novej stránky.
         for(byte i = 0; i < 10; i++)
         {
             setTeacherLabelText(i, "");

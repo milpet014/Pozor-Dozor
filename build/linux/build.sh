@@ -30,7 +30,13 @@ jpackage \
   --main-class "$MAIN_CLASS" \
   --dest "$OUTPUT_DIR" \
   --app-version "$VERSION" \
-  --java-options "-Dfile.encoding=UTF-8"
+  --add-modules java.desktop,java.net.http,java.xml,java.logging,java.prefs,jdk.localedata \
+  --jlink-options "--include-locales=sk,en" \
+  --java-options "-Dfile.encoding=UTF-8" \
+  --java-options "-Duser.language=sk" \
+  --java-options "-Duser.country=SK" \
+  --java-options "--add-opens=java.base/java.nio=ALL-UNNAMED" \
+  --java-options "--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"
 
 mkdir -p "$APPDIR/usr"
 cp -a "$OUTPUT_DIR/$APP_NAME"/* "$APPDIR/usr/"

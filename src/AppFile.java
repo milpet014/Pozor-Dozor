@@ -8,18 +8,22 @@ import java.util.List;
 
 public final class AppFile
 {
+    // Hlavný dátový priečinok aplikácie.
     private static Path appDataPath = AppPath.resolveAppDataDir();
 
+    // Trieda slúži iba staticky, preto sa nemá vytvárať jej inštancia.
     private AppFile(){};
 
     public static void checkFile(Path file, String header)
     {
+        // Kontrola bežného konfiguračného súboru s hlavičkou začínajúcou znakom #.
         if(Files.exists(file))
         {
             if(!checkFileHeader(file, header))
             {
                 try
                 {
+                    // Ak má súbor nesprávnu hlavičku, vytvorí sa nanovo.
                     Files.delete(file);
                     createFile(file, header);
                 }
@@ -31,6 +35,7 @@ public final class AppFile
         }
         else
         {
+            // Ak súbor neexistuje, vytvorí sa.
             createFile(file, header);
         }
     }
@@ -39,6 +44,7 @@ public final class AppFile
     {
         try
         {
+            // Vytvorenie dátového priečinka a základného súboru s hlavičkou.
             Files.createDirectories(appDataPath);
             Files.writeString(file, "#" + header);
         }
@@ -52,6 +58,7 @@ public final class AppFile
     {
         try
         {
+            // Prvý riadok musí obsahovať očakávanú hlavičku.
             List<String> lines = Files.readAllLines(file);
             if(lines.isEmpty() || !lines.get(0).equals("#" + header))
             {
@@ -69,20 +76,24 @@ public final class AppFile
 
     public static void checkCsvFile(Path file, String header)
     {
+        // Zjednodušená kontrola CSV bez záložného súboru.
         checkCsvFile(file, header, null, null);
     }
 
     public static void checkCsvFile(Path file, String header, Path backupFile, String fileLabel)
     {
+        // Kontrola CSV súboru a jeho hlavičky.
         if(Files.exists(file))
         {
             if(!checkCsvFileHeader(file, header))
             {
+                // Pri nesprávnej hlavičke sa CSV opraví alebo vytvorí nanovo.
                 repairCsvFile(file, header, backupFile, fileLabel);
             }
         }
         else
         {
+            // Ak CSV neexistuje, vytvorí sa s očakávanou hlavičkou.
             createCsvFile(file, header);
         }
     }
@@ -91,11 +102,13 @@ public final class AppFile
     {
         try
         {
+            // Ak je zadaná cesta k zálohe, pôvodný poškodený súbor sa najprv skopíruje.
             if(backupFile != null && Files.exists(file))
             {
                 Files.copy(file, backupFile, StandardCopyOption.REPLACE_EXISTING);
             }
 
+            // Vytvorenie nového čistého CSV súboru.
             createCsvFile(file, header);
 
             if(fileLabel != null)
@@ -113,6 +126,7 @@ public final class AppFile
     {
         try
         {
+            // Vytvorenie dátového priečinka a CSV súboru s hlavičkou.
             Files.createDirectories(appDataPath);
             Files.writeString(file, header + System.lineSeparator());
         }
@@ -126,6 +140,7 @@ public final class AppFile
     {
         try
         {
+            // CSV súbor musí mať v prvom riadku presne očakávanú hlavičku.
             List<String> lines = Files.readAllLines(file);
 
             if(lines.isEmpty() || !lines.get(0).equals(header))

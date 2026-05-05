@@ -3,8 +3,13 @@ import java.awt.*;
 
 public class MonthSettingsForm
 {
+    // Hlavný panel formulára vytvorený cez IntelliJ GUI Designer.
     private JPanel rootPanel;
+
+    // Nadpis aktuálne zobrazeného mesiaca.
     private JLabel monthLabel;
+
+    // Checkboxy pre jednotlivé dni mesiaca.
     private JCheckBox checkBox1;
     private JCheckBox checkBox2;
     private JCheckBox checkBox3;
@@ -20,11 +25,17 @@ public class MonthSettingsForm
     private JCheckBox checkBox13;
     private JCheckBox checkBox14;
     private JCheckBox checkBox15;
+
+    // Panel s ovládacími tlačidlami.
     private JPanel buttonsPanel;
+
+    // Tlačidlá na prepínanie mesiacov a zatvorenie formulára.
     private JButton previousButton;
     private JButton nextButton;
     private JButton okButton;
     private JButton cancelButton;
+
+    // Checkboxy pre zvyšné dni mesiaca.
     private JCheckBox checkBox16;
     private JCheckBox checkBox17;
     private JCheckBox checkBox18;
@@ -44,36 +55,43 @@ public class MonthSettingsForm
 
     public JPanel getRootPanel()
     {
+        // Vracia hlavný panel formulára.
         return rootPanel;
     }
 
     public JButton getPreviousButton()
     {
+        // Vracia tlačidlo na predchádzajúci mesiac.
         return previousButton;
     }
 
     public JButton getNextButton()
     {
+        // Vracia tlačidlo na nasledujúci mesiac.
         return nextButton;
     }
 
     public JButton getOkButton()
     {
+        // Vracia tlačidlo na uloženie a zatvorenie formulára.
         return okButton;
     }
 
     public JButton getCancelButton()
     {
+        // Vracia tlačidlo na zatvorenie formulára bez uloženia aktuálnej zmeny.
         return cancelButton;
     }
 
     public void setMonthLabelText(String text)
     {
+        // Nastaví text nadpisu aktuálneho mesiaca.
         monthLabel.setText(text);
     }
 
     public JCheckBox getCheckBox(int index)
     {
+        // Vracia checkbox podľa indexu dňa v mesiaci.
         switch(index)
         {
             case 0: return checkBox1;
@@ -113,6 +131,7 @@ public class MonthSettingsForm
 
     public void clearCheckBoxes()
     {
+        // Vynulovanie všetkých checkboxov pred načítaním nového mesiaca.
         for(int i = 0; i < 31; i++)
         {
             JCheckBox checkBox = getCheckBox(i);

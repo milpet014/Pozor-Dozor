@@ -10,10 +10,14 @@ import java.util.Comparator;
 
 public class TeacherRepository
 {
+    // Počet položiek v jednom riadku CSV súboru.
     private static final byte CSV_ITEMS = 13;
+
+    // Očakávaná hlavička súboru teachers.csv.
     private static final String HEADER =
             "id;degreeBeforeName;firstName;middleName;lastName;degreeAfterName;dutyCount;lastDutyWeek;canMonday;canTuesday;canWednesday;canThursday;canFriday";
 
+    // Cesty k hlavnému CSV súboru, dátovému priečinku a zálohe poškodeného CSV.
     private final Path teachersPath = AppPath.teachersPath();
     private final Path appDataPath = AppPath.appDataPath();
     private final Path teachersBackupPath = AppPath.appDataPath().resolve("teachers_backup.csv");
@@ -22,21 +26,27 @@ public class TeacherRepository
 
     public List<Teacher> loadTeachers()
     {
+        // Zoznam učiteľov načítaných zo súboru.
         List<Teacher> teachers = new ArrayList<>();
+
         try
         {
+            // Pred čítaním sa overí existencia a hlavička CSV súboru.
             ensureTeachersFileReady();
 
             List<String> lines = Files.readAllLines(teachersPath);
 
             for(String line : lines)
             {
+                // Prázdne riadky a hlavička sa preskočia.
                 if(line.isBlank() || line.startsWith("id;")) continue;
 
                 String[] parts = line.split(";", -1);
 
+                // Riadky s nesprávnym počtom stĺpcov sa ignorujú.
                 if(parts.length != CSV_ITEMS) continue;
 
+                // Načítanie základných údajov učiteľa.
                 int id = Integer.parseInt(parts[0]);
                 String degreeBeforeName = parts[1];
                 String firstName = parts[2];
@@ -44,15 +54,18 @@ public class TeacherRepository
                 String lastName = parts[4];
                 String degreeAfterName = parts[5];
 
+                // Načítanie štatistických údajov učiteľa.
                 int dutyCount = Integer.parseInt(parts[6]);
                 int lastDutyWeek = Integer.parseInt(parts[7]);
 
+                // Načítanie dostupnosti podľa pracovných dní.
                 boolean canMonday = Boolean.parseBoolean(parts[8]);
                 boolean canTuesday = Boolean.parseBoolean(parts[9]);
                 boolean canWednesday = Boolean.parseBoolean(parts[10]);
                 boolean canThursday = Boolean.parseBoolean(parts[11]);
                 boolean canFriday = Boolean.parseBoolean(parts[12]);
 
+                // Vytvorenie objektu učiteľa.
                 Teacher teacher = new Teacher(id,
                         degreeBeforeName,
                         firstName,
@@ -65,6 +78,7 @@ public class TeacherRepository
                         canThursday,
                         canFriday);
 
+                // Doplnenie štatistických údajov, ktoré nie sú súčasťou konštruktora.
                 teacher.setDutyCount(dutyCount);
                 teacher.setLastDutyWeek(lastDutyWeek);
 
@@ -85,8 +99,10 @@ public class TeacherRepository
 
     public String buildTeachersSignature()
     {
+        // Podpis zoznamu učiteľov slúži na zistenie, či sa údaje po vygenerovaní náhľadu nezmenili.
         List<Teacher> teachers = loadTeachers();
 
+        // Zoradenie podľa ID zabezpečí stabilný podpis bez ohľadu na poradie v pamäti.
         teachers.sort(Comparator.comparingInt(Teacher::getId));
 
         StringBuilder signature = new StringBuilder();
@@ -114,8 +130,10 @@ public class TeacherRepository
 
     public boolean deleteTeacherById(int id)
     {
+        // Načítanie aktuálneho zoznamu učiteľov.
         List<Teacher> teachers = loadTeachers();
 
+        // Odstránenie učiteľa podľa ID.
         boolean removed = teachers.removeIf(teacher -> teacher.getId() == id);
 
         if(!removed)
@@ -124,6 +142,7 @@ public class TeacherRepository
             return false;
         }
 
+        // Vytvorenie nového obsahu CSV bez vymazaného učiteľa.
         StringBuilder content = new StringBuilder();
         content.append(HEADER).append(System.lineSeparator());
 
@@ -134,6 +153,7 @@ public class TeacherRepository
 
         try
         {
+            // Prepísanie CSV súboru novým obsahom.
             Files.writeString(teachersPath, content.toString());
             return true;
         }
@@ -148,8 +168,10 @@ public class TeacherRepository
     {
         try
         {
+            // Vytvorenie dátového priečinka, ak ešte neexistuje.
             Files.createDirectories(appDataPath);
 
+            // Ak teachers.csv neexistuje, vytvorí sa s hlavičkou.
             if(!Files.exists(teachersPath))
             {
                 Files.writeString(teachersPath, HEADER + System.lineSeparator());
@@ -158,12 +180,14 @@ public class TeacherRepository
 
             List<String> lines = Files.readAllLines(teachersPath);
 
+            // Prázdny súbor sa obnoví iba s hlavičkou.
             if(lines.isEmpty())
             {
                 Files.writeString(teachersPath, HEADER + System.lineSeparator());
                 return;
             }
 
+            // Ak hlavička nesedí, pôvodný súbor sa zálohuje a vytvorí sa nový.
             if(!lines.get(0).equals(HEADER))
             {
                 Files.copy(teachersPath, teachersBackupPath, StandardCopyOption.REPLACE_EXISTING);
@@ -183,6 +207,7 @@ public class TeacherRepository
     {
         try
         {
+            // Pred hľadaním ID sa overí súbor.
             ensureTeachersFileReady();
 
             List<String> lines = Files.readAllLines(teachersPath);
@@ -191,6 +216,7 @@ public class TeacherRepository
 
             for(String line : lines)
             {
+                // Hlavička a prázdne riadky sa preskočia.
                 if(line.isBlank() || line.startsWith("id;"))
                 {
                     continue;
@@ -198,6 +224,7 @@ public class TeacherRepository
 
                 String[] parts = line.split(";", -1);
 
+                // Z prvého stĺpca sa načíta ID.
                 int currentId = Integer.parseInt(parts[0]);
 
                 if(currentId > lastId)
@@ -206,6 +233,7 @@ public class TeacherRepository
                 }
             }
 
+            // Nové ID je o 1 vyššie než najvyššie existujúce ID.
             return lastId + 1;
         }
         catch(IOException e)
@@ -222,6 +250,7 @@ public class TeacherRepository
 
     public boolean saveAllTeachers(List<Teacher> teachers)
     {
+        // Vytvorenie kompletného obsahu CSV zo zoznamu učiteľov.
         StringBuilder content = new StringBuilder();
         content.append(HEADER).append(System.lineSeparator());
 
@@ -232,6 +261,7 @@ public class TeacherRepository
 
         try
         {
+            // Prepísanie celého teachers.csv.
             Files.writeString(teachersPath, content.toString());
             return true;
         }
@@ -246,8 +276,10 @@ public class TeacherRepository
     {
         try
         {
+            // Pred zápisom sa overí, že CSV existuje a má správnu hlavičku.
             ensureTeachersFileReady();
 
+            // Jeden učiteľ sa pridá ako nový riadok na koniec CSV.
             String line = toCsvLine(teacher) + System.lineSeparator();
 
             Files.writeString(teachersPath, line, StandardOpenOption.APPEND);
@@ -263,10 +295,12 @@ public class TeacherRepository
 
     public boolean updateTeacher(Teacher updatedTeacher)
     {
+        // Načítanie aktuálneho zoznamu učiteľov.
         List<Teacher> teachers = loadTeachers();
 
         boolean found = false;
 
+        // Vyhľadanie učiteľa podľa ID a jeho nahradenie upravenou verziou.
         for(int i = 0; i < teachers.size(); i++)
         {
             if(teachers.get(i).getId() == updatedTeacher.getId())
@@ -283,6 +317,7 @@ public class TeacherRepository
             return false;
         }
 
+        // Vytvorenie nového obsahu CSV s upraveným učiteľom.
         StringBuilder content = new StringBuilder();
         content.append(HEADER).append(System.lineSeparator());
 
@@ -293,6 +328,7 @@ public class TeacherRepository
 
         try
         {
+            // Prepísanie CSV súboru.
             Files.writeString(teachersPath, content.toString());
             return true;
         }
@@ -305,6 +341,7 @@ public class TeacherRepository
 
     private String toCsvLine(Teacher teacher)
     {
+        // Prevod učiteľa na jeden CSV riadok.
         return teacher.getId() + ";" +
                 clean(teacher.getDegreeBeforeName()) + ";" +
                 clean(teacher.getFirstName()) + ";" +
@@ -322,6 +359,7 @@ public class TeacherRepository
 
     private String clean(String text)
     {
+        // Ošetrenie textu pred uložením do jednoduchého CSV formátu.
         if(text == null) return "";
 
         return text.replace(";", ",").replace("\n", " ").replace("\r", " ");
